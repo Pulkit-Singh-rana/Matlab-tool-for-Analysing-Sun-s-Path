@@ -1,0 +1,30 @@
+function v=sun_path(latitude,min_sun_angle,elevation,R,detail)
+% Latitude of Delhi is around 28.7 degrees
+% and sun angle difference between summer and winter
+% is around 46.9 Degrees.
+% and "elevation" is the minimal elevation angle at which we start to 
+%observe proper sunlight which is around 23.66 degrees but you can assign any value from zero(for Horizon) to 90 degrees 
+%min_sun_angle is the angle of sun when it is highest in the sky it's vale depends on what day of the year you are computing sun's path
+%and also your latitude
+n=[0,-cosd(latitude),sind(latitude)];% Normal of plane
+p0=R*[0,-cosd(min_sun_angle),sind(min_sun_angle)]; % Most extreem Position of sun
+a=n(1);  x0=p0(1);
+b=n(2);  y0=p0(2);
+c=n(3);  z0=p0(3);
+
+d=-(a*x0+b*y0+c*z0);
+D=abs(d)/norm(n);%Perpendicular Distance from center of sun's path to origin
+Center_position=D*n/norm(n);
+r=sqrt(R^2-D^2);%Radius of sun's path from it's center
+% Equation of circle formed by cutting sphere ( x^2+y^2+z^2=R^2) by a plane (ax+by+cz+d=0)is..
+[x,y,z]=circ_mirror(r,detail,n,Center_position);
+below_elevation=z<R*sind(elevation);
+x(below_elevation)=nan;
+y(below_elevation)=nan;
+z(below_elevation)=nan;
+
+v=[x',y',z'];
+%plot3(x,y,z);
+
+
+end
