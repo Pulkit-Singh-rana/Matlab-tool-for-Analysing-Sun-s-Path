@@ -1,0 +1,36 @@
+%By using this function you will get sun's path of whole year from January 1 to December 31 by giving your Latitude(0 to 90),
+%Elevation(0 -90),Radius of the Path and detail of the path (keep it more than 100)
+%The result would be in the form of a matrix 2*detail x 3 x 365
+%here each column represent an axis data for example 2nd column represent y axis data and;
+%each entry of 3rd dimension is a day path of the year.
+
+
+
+function data_base_of_path =year_path(latitude,elevation,R,detail)
+min_sun_angle=latitude+90-23.45;
+num1=days365('21-june','23-sep');
+num2=days365('23-sep','21-dec');
+num3=days365('21-dec-2018','20-march-2019');
+num4=days365('20-march','21-june');
+
+vec1=linspace(0,23.45,num1);
+vec2=linspace(23.45,46.9,num2);
+vec3=linspace(46.9,23.45,num3);
+% vec3=fliplr(vec3);
+vec4=linspace(23.45,0,num4);
+% vec4=fliplr(vec4);
+
+final_vec=[vec1 vec2 vec3 vec4];
+data_base_of_path=nan(detail*2,3,365);
+
+
+for num=1:365
+    v=sun_path2(latitude,min_sun_angle+final_vec(num),elevation,R,detail);
+    [m,~]=size(v);
+    data_base_of_path(1:m,:,num)=v;
+end
+year_days=1:365;
+constant_days_shift=days365('1-jan','21-june');
+year_days=circshift(year_days,constant_days_shift);
+data_base_of_path=data_base_of_path(:,:,year_days);
+end
