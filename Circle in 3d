@@ -1,0 +1,52 @@
+%Using this function you can get a circle in 3 dimensions of given "radius", "normal","center position" and "detail"
+%keep "detail" more than 100 to get better results
+
+function [x4,y4,z4]=circ_mirror(radius,detail,direction,position)
+
+phii=linspace(0,2*pi,detail);
+x1=radius*cos(phii);
+y1=radius*sin(phii);
+z1=zeros(1,length(x1));
+%plot3(x,y,z)
+
+if norm(direction)==0
+    theta=0;
+else
+   theta= angle(direction(3)+1i*norm(direction(1:2)));
+   theta=theta*180/pi;
+ 
+end
+
+if norm(direction(1:2))==0
+    phi=0;
+    
+else
+   phi=angle(direction(1)+1i*direction(2));
+   phi=phi*180/pi;
+end
+
+% Directional Rotation
+% Around y axis
+theta=-theta;
+y2 = y1;
+x2= x1*cosd(theta) - z1*sind(theta);
+z2= x1*sind(theta) + z1*cosd(theta);
+clear x1 y1 z1
+% Around z axis 
+phi=-phi;
+z3 = z2;
+y3= y2*cosd(phi) - x2*sind(phi);
+x3= y2*sind(phi) + x2*cosd(phi);
+
+% Position Transform
+x4=x3+position(1);
+y4=y3+position(2);
+z4=z3+position(3);
+
+% plot3(x4,y4,z4);
+% hold on;
+% quiver3(position(1),position(2),position(3),direction(1),direction(2),direction(3));
+% scatter3(position(1),position(2),position(3));
+% grid on;
+
+end
